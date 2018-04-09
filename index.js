@@ -3,167 +3,9 @@
 */
 
 'use strict';
-var Alexa = require("alexa-sdk");
-
-exports.handler = function(event, context) {
-    var alexa = Alexa.handler(event, context);
-    alexa.registerHandlers(handlers, questionHandlers, conslusionHandlers);
-    alexa.execute();
-};
-
-var handlers = {
-    'LaunchRequest': function () {
-        this.emit('SayHello');
-    },
-    'HelloWorldIntent': function () {
-        this.emit('SayHello');
-    },
-    'MyNameIsIntent': function () {
-        this.emit('SayHelloName');
-    },
-    'SayHello': function () {
-      this.handler.state = "_QUESTIONS";
-        this.response.speak('Hello World! Guys tell me Yes or No Bro')
-                     .listen('Can you say or no');
-        this.emit(':responseReady');
-    },
-    'SayHelloName': function () {
-        var name = this.event.request.intent.slots.name.value;
-        this.response.speak('Hello ' + name)
-            .cardRenderer('hello world', 'hello ' + name);
-        this.emit(':responseReady');
-    },
-    'SessionEndedRequest' : function() {
-        console.log('Session ended with reason: ' + this.event.request.reason);
-    },
-    'AMAZON.StopIntent' : function() {
-        this.response.speak('Bye');
-        this.emit(':responseReady');
-    },
-    'AMAZON.HelpIntent' : function() {
-        this.response.speak("SOME RANDOM CALL'");
-        this.emit(':responseReady');
-    },
-    // MAKING THE NEW CHANGES
-    // 'AMAZON.YESIntent' : function() {
-    //     this.response.speak("You said YES'");
-    //     this.emit(':responseReady');
-    //   },
-    //   'AMAZON.NOIntent' : function() {
-    //       this.response.speak("You said no'");
-    //   this.emit(':responseReady');
-    //   },
-    'AMAZON.CancelIntent' : function() {
-        this.response.speak('Bye');
-        this.emit(':responseReady');
-    },
-    'Unhandled': function () {
-        //log the event sent by the Alexa Service in human readable format
-        console.log(JSON.stringify(this.event));
-        let skillId, requestType, dialogState, intent ,intentName, intentConfirmationStatus, slotArray, slots, count;
-
-        try {
-            //Parse necessary data from JSON object using dot notation
-            //build output strings and check for undefined
-            skillId = this.event.session.application.applicationId;
-            requestType = "This is an Unhandled request. The request type is, "+this.event.request.type+" .";
-            dialogState = this.event.request.dialogState;
-            intent = this.event.request.intent;
-            if (intent != undefined) {
-                intentName = " The intent name is, "+this.event.request.intent.name+" .";
-                slotArray = this.event.request.intent.slots;
-                intentConfirmationStatus = this.event.request.intent.confirmationStatus;
-                if (intentConfirmationStatus != "NONE" && intentConfirmationStatus != undefined ) {
-                    intentConfirmationStatus = " and its confirmation status is "+ intentConfirmationStatus+" . ";
-                    intentName = intentName+intentConfirmationStatus;
-                }
-            } else {
-                intentName = "";
-                slotArray = "";
-                intentConfirmationStatus = "";
-            }
-            slots = "";
-            count = 0;
-
-            if (slotArray == undefined || slots == undefined) {
-                slots = "";
-            }
-            //Iterating through slot array
-            for (let slot in slotArray) {
-                count += 1;
-                let slotName = slotArray[slot].name;
-                let slotValue = slotArray[slot].value;
-                let slotConfirmationStatus = slotArray[slot].confirmationStatus;
-                slots = slots + "The <say-as interpret-as='ordinal'>"+count+"</say-as> slot is, " + slotName + ", its value is, " +slotValue;
-
-                if (slotConfirmationStatus!= undefined && slotConfirmationStatus != "NONE") {
-                  slots = slots+" and its confirmation status is "+slotConfirmationStatus+" . ";
-                } else {
-                  slots = slots+" . ";
-                }
-            }
-            //Delegate to Dialog Manager when needed
-            //<reference to docs>
-            if (dialogState == "STARTED" || dialogState == "IN_PROGRESS") {
-              this.emit(":delegate");
-            }
-        } catch(err) {
-            console.log("Error: " + err.message);
-        }
-
-        let speechOutput = "Your end point receive a request, here's a breakdown. " + requestType + " " + intentName + slots;
-        let cardTitle = "Skill ID: " + skillId;
-        let cardContent = speechOutput;
-
-        this.response.cardRenderer(cardTitle, cardContent);
-        this.response.speak(speechOutput);
-        this.emit(':responseReady');
-      }
-};
-
-
-
-
-
-var questionHandlers = Alexa.CreateStateHandler("_QUESTIONS", {
-  'AMAZON.YesIntent' : function() {
-    this.handler.state = "_CONCLUSION";
-      this.response.speak("You said YES bro in the question. Would you like to continue")
-                    .listen('Would you like');
-      this.emit(':responseReady');
-    },
-    'AMAZON.NoIntent' : function() {
-      this.response.speak("You said no bro in the question. Would you like to continue")
-                    .listen('Would you like');
-    this.emit(':responseReady');
-    },
-});
-
-
-var conslusionHandlers = Alexa.CreateStateHandler("_CONCLUSION",{
-  'AMAZON.YesIntent' : function() {
-      this.response.speak("You said YES dude on the conclusion'");
-      this.emit(':responseReady');
-    },
-    'AMAZON.NoIntent' : function() {
-        this.response.speak("You said no dude on the conclusion'");
-    this.emit(':responseReady');
-    },
-});
-
-
-
-// MY code
-// For Instruction: https://github.com/skilltemplates/basic-starter-alexa
-//  For Video :https://www.youtube.com/watch?v=ukR0Aw5P3W8&index=2&list=PLR2Q1A4ici5-o6zUxjs3W9LmvYV0P54ZF
-
-
-
-'use strict';
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
-
 exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
@@ -216,8 +58,8 @@ function onLaunch(launchRequest, session, callback) {
     console.log("onLaunch requestId=" + launchRequest.requestId
         + ", sessionId=" + session.sessionId);
 
-    var cardTitle = "Customer Orders"
-    var speechOutput = "You can ask APEX how many orders are in the orders table by saying. Alexa, ask APEX how many orders there are."
+    var cardTitle = "Kellogg Coupons"
+    var speechOutput = "You can ask Kellogg their coupons. Try saying, Alexa, ask Kellogg What is the most common distribution method for coupons."
     callback(session.attributes,
         buildSpeechletResponse(cardTitle, speechOutput, "", true));
 }
@@ -244,6 +86,36 @@ function onIntent(intentRequest, session, callback) {
         }
         else if (intentName == 'BrandName') {
         handleChartRequestBrandName(intent, session, callback);
+        }
+        else if (intentName == 'DistMethodSix') {
+        handleChartRequestDistMethodSix(intent, session, callback);
+        }
+        else if (intentName == 'TopBrands') {
+        handleChartRequestTopBrands(intent, session, callback);
+        }
+        else if (intentName == 'TopDistMethod') {
+        handleChartRequestTopDistMethod(intent, session, callback);
+        }
+        else if (intentName == 'BrandNameSix') {
+        handleChartRequestBrandNameSix(intent, session, callback);
+        }
+        else if (intentName == 'CouponTypeSix') {
+        handleChartRequestCouponTypeSix(intent, session, callback);
+        }
+        else if (intentName == 'DistCountFour') {
+        handleChartRequestDistCountFour(intent, session, callback);
+        }
+         else if (intentName == 'DistCountFive') {
+        handleChartRequestDistCountFive(intent, session, callback);
+        }
+         else if (intentName == 'DistCountSix') {
+        handleChartRequestDistCountSix(intent, session, callback);
+        }
+        else if (intentName == 'PromoType') {
+        handleChartRequestPromoType(intent, session, callback);
+        }
+        else if (intentName == 'TopPromo') {
+        handleChartRequestTopPromo(intent, session, callback);
         }
     else {
         throw "Invalid intent";
@@ -366,22 +238,10 @@ var callAPEXCouponType = function (callbackCouponType) {
 
         res.on("end",  () => {
             var result = JSON.parse(body);
-             var handlers = {
 
-};
-
-            callbackCouponType({"speech":result.items[0].message + [". Would you like to know the most common bla?"]
-
-
-
-
-            });
-
-
-
+            callbackCouponType({"speech":result.items[0].message + ". Would you like to know what was the most common Coupon Type used in 2016?" });
             //callback('test');
         });
-
 
 
     }).on("error", (error) => {
@@ -425,6 +285,397 @@ var callAPEXBrandName = function (callbackBrandName) {
         console.log('error');
     });
 };
+
+
+// UNDEFINED RESPONSE ERROR
+function handleChartRequestDistMethodSix(intent, session, callbackDistMethodSix) {
+
+         callAPEXDistMethodSix(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackDistMethodSix(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+
+
+
+
+var callAPEXDistMethodSix = function (callbackDistMethodSix) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistMethod2016/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackDistMethodSix({"speech":result.items[0].message + ". Would you like to know what was the most common distribution method in 2016?" });
+
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestTopBrands(intent, session, callbackTopBrands) {
+
+         callAPEXTopBrands(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackTopBrands(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+var callAPEXTopBrands = function (callbackTopBrands) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PaidOff/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackTopBrands({"speech": "The top 10 paid off brands are.  " + result.items[0].message + ".  " + result.items[1].message
+        + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  " + result.items[4].message + ".  " + result.items[5].message
+        + ".  " + result.items[6].message + ".  " + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message
+
+           + ". Would you like to know what are the top 10 coupon distribution methods?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestTopDistMethod(intent, session, callbackTopDistMethod) {
+
+         callAPEXTopDistMethod(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackTopDistMethod(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+var callAPEXTopDistMethod = function (callbackTopDistMethod) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10DistMethod/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackTopDistMethod({"speech": "The top 10 distribution methods are.  " + result.items[0].message + ".  " + result.items[1].message
+        + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  " + result.items[4].message + ".  " + result.items[5].message
+        + ".  " + result.items[6].message + ".  " + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message
+
+           + ". Would you like to know what are the top 10 paid off brands?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+// UNDEFINED RESPONSE ERROR
+function handleChartRequestBrandNameSix(intent, session, callbackBrandNameSix) {
+
+         callAPEXBrandNameSix(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackBrandNameSix(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+
+var callAPEXBrandNameSix = function (callbackBrandNameSix) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comBrandName2016/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackBrandNameSix({"speech": result.items[0].message + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestCouponTypeSix(intent, session, callbackCouponTypeSix) {
+
+         callAPEXCouponTypeSix(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackCouponTypeSix(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+// UNDEFINED RESPONSE ERROR
+var callAPEXCouponTypeSix = function (callbackCouponTypeSix) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comCouponType2016/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackCouponTypeSix({"speech": "The most common coupon type used in 2016 was" + result.items[0].message
+            + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestDistCountFour(intent, session, callbackDistCountFour) {
+
+         callAPEXDistCountFour(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackDistCountFour(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+var callAPEXDistCountFour = function (callbackDistCountFour) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2014";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackDistCountFour({"speech": result.items[0].message
+            + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestDistCountFive(intent, session, callbackDistCountFive) {
+
+         callAPEXDistCountFive(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackDistCountFive(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+
+var callAPEXDistCountFive = function (callbackDistCountFive) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2015/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackDistCountFive({"speech": result.items[0].message
+            + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestDistCountSix(intent, session, callbackDistCountSix) {
+
+         callAPEXDistCountSix(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackDistCountSix(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+var callAPEXDistCountSix = function (callbackDistCountSix) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2016/";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackDistCountSix({"speech": result.items[0].message
+            + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestPromoType(intent, session, callbackPromoType) {
+
+         callAPEXPromoType(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackPromoType(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+
+var callAPEXPromoType = function (callbackPromoType) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comPromoType";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackPromoType({"speech": result.items[0].message
+            + ". Would you like to know what was the most common brand in 2016?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
+function handleChartRequestTopPromo(intent, session, callbackTopPromo) {
+
+         callAPEXTopPromo(function (result, error) {
+
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackTopPromo(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
+
+// UNDEFINED RESPONSE ERROR
+var callAPEXTopPromo = function (callbackTopPromo) {
+
+    var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PromoType";
+
+    var req = https.get(url, (res) => {
+        var body = "";
+
+        res.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        res.on("end",  () => {
+            var result = JSON.parse(body);
+
+            callbackTopPromo({"speech": "The top 10 promotion types are. " + result.items[0].message + ".  "
+            + result.items[1].message + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  "
+             + result.items[4].message + ".  " + result.items[5].message + ".  " + result.items[6].message + ".  "
+              + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message + ".  "
+            + ". Would you like to know the top 10 paid off brands?" });
+            //callback('test');
+        });
+    }).on("error", (error) => {
+        //callback(err);
+        console.log('error');
+    });
+};
+
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     return {
