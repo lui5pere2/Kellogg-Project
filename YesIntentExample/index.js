@@ -19,7 +19,7 @@ var handlers = {
     },
     'SayHello': function () {
       this.handler.state = "_QUESTIONS";
-        this.response.speak('Hello World! Guys tell me Yes or No Bro')
+        this.response.speak('Hello World! This a conversation example. Please say Yes or No')
                      .listen('Can you say or no');
         this.emit(':responseReady');
     },
@@ -109,11 +109,14 @@ var handlers = {
       }
 };
 
+
+
+
+
 var questionHandlers = Alexa.CreateStateHandler("_QUESTIONS", {
   'AMAZON.YesIntent' : function() {
     this.handler.state = "_CONCLUSION";
-      this.response.speak("You said YES bro in the question. Would you like to continue")
-                    .listen('Would you like');
+      this.response.speak("You said YES dude on the question'");
       this.emit(':responseReady');
     },
     'AMAZON.NoIntent' : function() {
@@ -134,9 +137,3 @@ var conslusionHandlers = Alexa.CreateStateHandler("_CONCLUSION",{
     this.emit(':responseReady');
     },
 });
-
-
-
-
-// For Instruction: https://github.com/skilltemplates/basic-starter-alexa
-//  For Video :https://www.youtube.com/watch?v=ukR0Aw5P3W8&index=2&list=PLR2Q1A4ici5-o6zUxjs3W9LmvYV0P54ZF

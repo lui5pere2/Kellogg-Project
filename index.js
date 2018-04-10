@@ -1,7 +1,3 @@
-/*
- Copyright 2016 Brian Donohue.
-*/
-
 'use strict';
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -9,16 +5,13 @@
 exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
-
         /**
          * Uncomment this if statement and populate with your skill's application ID to
          * prevent someone else from configuring a skill that sends requests to this function.
          */
-
         if (event.session.new) {
             onSessionStarted({requestId: event.request.requestId}, event.session);
         }
-
         if (event.request.type === "LaunchRequest") {
             onLaunch(event.request,
                 event.session,
@@ -46,8 +39,6 @@ exports.handler = function (event, context) {
 function onSessionStarted(sessionStartedRequest, session) {
     console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId
         + ", sessionId=" + session.sessionId);
-
-    // add any session init logic here
 }
 
 /**
@@ -57,7 +48,6 @@ function onSessionStarted(sessionStartedRequest, session) {
 function onLaunch(launchRequest, session, callback) {
     console.log("onLaunch requestId=" + launchRequest.requestId
         + ", sessionId=" + session.sessionId);
-
     var cardTitle = "Kellogg Coupons"
     var speechOutput = "You can ask Kellogg their coupons. Try saying, Alexa, ask Kellogg What is the most common distribution method for coupons."
     callback(session.attributes,
@@ -74,8 +64,12 @@ function onIntent(intentRequest, session, callback) {
     var intent = intentRequest.intent,
         intentName = intentRequest.intent.name;
 
-    // dispatch custom intents to handlers here
-    if (intentName == 'DistMethod') {
+/******************************************************************************
+* Dispatch custom intents to handlers here. We use if else staments to be able
+* to ask multiple questions. Every single time we add new 	questions, we
+* have to enter a new "else if" statement to our current code.
+******************************************************************************/
+        if (intentName == 'DistMethod') {
         handleChartRequestDistMethod(intent, session, callback);
         }
        else if (intentName == 'NumberOfRecords') {
@@ -128,15 +122,11 @@ function onIntent(intentRequest, session, callback) {
 function onSessionEnded(sessionEndedRequest, session) {
     console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId
         + ", sessionId=" + session.sessionId);
-
-    // Add any cleanup logic here
 }
 const https = require('https');
 
 function handleChartRequestDistMethod(intent, session, callbackDistMethod) {
-
          callAPEXDistMethod(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -146,38 +136,33 @@ function handleChartRequestDistMethod(intent, session, callbackDistMethod) {
         });
 }
 
+/******************************************************************************
+BEGIN CODING TO ASK THE QUESTIONS. EACH BLOCK OF QUESTIONS MUST BE AROUND 25
+LINES OF CODE. GRAB THE CODE FROM A PREVIOUS QUESTION AND REMPLACE THE KEYS.
+******************************************************************************/
 
-
-
-
+/******************************************************************************
+QUESTION 1
+FROM LINES 108 - 132 (LINES COULD CHANGE) IS ONLY ONE QUESTION
+NOTE, THIS QUESTION IS TRYING TO MAKE ALEXA ASK THE USER FOR A QUESTION.
+******************************************************************************/
 var callAPEXDistMethod = function (callbackDistMethod) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistMethod/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackDistMethod({"speech":result.items[0].message + ". Would you like to know what was the most common distribution method in 2016?" });
-
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestNumberOfRecords(intent, session, callbackNumberOfRecords) {
-
          callAPEXNumberOfRecords(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -187,35 +172,26 @@ function handleChartRequestNumberOfRecords(intent, session, callbackNumberOfReco
         });
 }
 
-
-
+/******************************************************************************
+QUESTION 2
+******************************************************************************/
 var callAPEXNumberOfRecords = function (callbackNumberOfRecords) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comrecords/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackNumberOfRecords({"speech":result.items[0].message });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestCouponType(intent, session, callbackCouponType) {
-
          callAPEXCouponType(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -225,35 +201,26 @@ function handleChartRequestCouponType(intent, session, callbackCouponType) {
         });
 }
 
+/******************************************************************************
+QUESTION 3
+******************************************************************************/
 var callAPEXCouponType = function (callbackCouponType) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comCouponType/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackCouponType({"speech":result.items[0].message + ". Would you like to know what was the most common Coupon Type used in 2016?" });
-            //callback('test');
         });
-
-
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestBrandName(intent, session, callbackBrandName) {
-
          callAPEXBrandName(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -263,35 +230,27 @@ function handleChartRequestBrandName(intent, session, callbackBrandName) {
         });
 }
 
+
+/******************************************************************************
+QUESTION 4 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 var callAPEXBrandName = function (callbackBrandName) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comBrandName/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackBrandName({"speech":result.items[0].message + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
-
-// UNDEFINED RESPONSE ERROR
 function handleChartRequestDistMethodSix(intent, session, callbackDistMethodSix) {
-
          callAPEXDistMethodSix(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -301,38 +260,26 @@ function handleChartRequestDistMethodSix(intent, session, callbackDistMethodSix)
         });
 }
 
-
-
-
-
+/******************************************************************************
+QUESTION 5
+******************************************************************************/
 var callAPEXDistMethodSix = function (callbackDistMethodSix) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistMethod2016/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackDistMethodSix({"speech":result.items[0].message + ". Would you like to know what was the most common distribution method in 2016?" });
-
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestTopBrands(intent, session, callbackTopBrands) {
-
          callAPEXTopBrands(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -342,37 +289,29 @@ function handleChartRequestTopBrands(intent, session, callbackTopBrands) {
         });
 }
 
+/******************************************************************************
+QUESTION 6
+******************************************************************************/
 var callAPEXTopBrands = function (callbackTopBrands) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PaidOff/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackTopBrands({"speech": "The top 10 paid off brands are.  " + result.items[0].message + ".  " + result.items[1].message
         + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  " + result.items[4].message + ".  " + result.items[5].message
         + ".  " + result.items[6].message + ".  " + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message
-
            + ". Would you like to know what are the top 10 coupon distribution methods?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestTopDistMethod(intent, session, callbackTopDistMethod) {
-
          callAPEXTopDistMethod(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -382,38 +321,30 @@ function handleChartRequestTopDistMethod(intent, session, callbackTopDistMethod)
         });
 }
 
+/******************************************************************************
+QUESTION 7 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 var callAPEXTopDistMethod = function (callbackTopDistMethod) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10DistMethod/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackTopDistMethod({"speech": "The top 10 distribution methods are.  " + result.items[0].message + ".  " + result.items[1].message
         + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  " + result.items[4].message + ".  " + result.items[5].message
         + ".  " + result.items[6].message + ".  " + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message
 
            + ". Would you like to know what are the top 10 paid off brands?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
-// UNDEFINED RESPONSE ERROR
 function handleChartRequestBrandNameSix(intent, session, callbackBrandNameSix) {
-
          callAPEXBrandNameSix(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -423,34 +354,26 @@ function handleChartRequestBrandNameSix(intent, session, callbackBrandNameSix) {
         });
 }
 
-
+/******************************************************************************
+QUESTION 8
+******************************************************************************/
 var callAPEXBrandNameSix = function (callbackBrandNameSix) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comBrandName2016/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackBrandNameSix({"speech": result.items[0].message + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestCouponTypeSix(intent, session, callbackCouponTypeSix) {
-
          callAPEXCouponTypeSix(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -460,35 +383,27 @@ function handleChartRequestCouponTypeSix(intent, session, callbackCouponTypeSix)
         });
 }
 
-// UNDEFINED RESPONSE ERROR
+/******************************************************************************
+QUESTION 9 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 var callAPEXCouponTypeSix = function (callbackCouponTypeSix) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comCouponType2016/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackCouponTypeSix({"speech": "The most common coupon type used in 2016 was" + result.items[0].message
             + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestDistCountFour(intent, session, callbackDistCountFour) {
-
          callAPEXDistCountFour(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -498,34 +413,27 @@ function handleChartRequestDistCountFour(intent, session, callbackDistCountFour)
         });
 }
 
+/******************************************************************************
+QUESTION 10
+******************************************************************************/
 var callAPEXDistCountFour = function (callbackDistCountFour) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2014";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackDistCountFour({"speech": result.items[0].message
             + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestDistCountFive(intent, session, callbackDistCountFive) {
-
          callAPEXDistCountFive(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -535,35 +443,27 @@ function handleChartRequestDistCountFive(intent, session, callbackDistCountFive)
         });
 }
 
-
+/******************************************************************************
+QUESTION 11
+******************************************************************************/
 var callAPEXDistCountFive = function (callbackDistCountFive) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2015/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackDistCountFive({"speech": result.items[0].message
             + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestDistCountSix(intent, session, callbackDistCountSix) {
-
          callAPEXDistCountSix(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -573,34 +473,27 @@ function handleChartRequestDistCountSix(intent, session, callbackDistCountSix) {
         });
 }
 
+/******************************************************************************
+QUESTION 12
+******************************************************************************/
 var callAPEXDistCountSix = function (callbackDistCountSix) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2016/";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackDistCountSix({"speech": result.items[0].message
             + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestPromoType(intent, session, callbackPromoType) {
-
          callAPEXPromoType(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -610,35 +503,27 @@ function handleChartRequestPromoType(intent, session, callbackPromoType) {
         });
 }
 
-
+/******************************************************************************
+QUESTION 13
+******************************************************************************/
 var callAPEXPromoType = function (callbackPromoType) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comPromoType";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackPromoType({"speech": result.items[0].message
             + ". Would you like to know what was the most common brand in 2016?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
-
 function handleChartRequestTopPromo(intent, session, callbackTopPromo) {
-
          callAPEXTopPromo(function (result, error) {
-
             if (error) {
                 console.log('error')
             } else {
@@ -648,33 +533,30 @@ function handleChartRequestTopPromo(intent, session, callbackTopPromo) {
         });
 }
 
-// UNDEFINED RESPONSE ERROR
+/******************************************************************************
+QUESTION 14 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 var callAPEXTopPromo = function (callbackTopPromo) {
-
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PromoType";
-
     var req = https.get(url, (res) => {
         var body = "";
-
         res.on("data", (chunk) => {
             body += chunk;
         });
-
         res.on("end",  () => {
             var result = JSON.parse(body);
-
             callbackTopPromo({"speech": "The top 10 promotion types are. " + result.items[0].message + ".  "
             + result.items[1].message + ".  " + result.items[2].message + ".  " + result.items[3].message + ".  "
              + result.items[4].message + ".  " + result.items[5].message + ".  " + result.items[6].message + ".  "
               + result.items[7].message + ".  " + result.items[8].message + ".  " + result.items[9].message + ".  "
             + ". Would you like to know the top 10 paid off brands?" });
-            //callback('test');
         });
     }).on("error", (error) => {
-        //callback(err);
         console.log('error');
     });
 };
+
+
 
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
@@ -697,7 +579,6 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
         shouldEndSession: shouldEndSession
     };
 }
-
 function buildSpeechletResponseWithoutCard(output, repromptText, shouldEndSession) {
     return {
         outputSpeech: {
@@ -713,7 +594,6 @@ function buildSpeechletResponseWithoutCard(output, repromptText, shouldEndSessio
         shouldEndSession: shouldEndSession
     };
 }
-
 function buildResponse(sessionAttributes, speechletResponse) {
     return {
         version: "1.0",
