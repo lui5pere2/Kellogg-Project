@@ -1,0 +1,138 @@
+Queries currently used in oracle server:
+●	BrandName:
+  SELECT * FROM (SELECT 'The most common brand is '|| BRAND ||'' message,
+         	COUNT(BRAND) AS Frequency
+	FROM 	NCH
+	GROUP BY BRAND
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+●	CouponType:
+  SELECT * FROM (SELECT 'The most common coupon type used by customers is in 2016 '|| COUPON_TYPE ||'' message,
+         	COUNT(COUPON_TYPE) AS Frequency
+	FROM 	KELLOGG3
+	GROUP BY COUPON_TYPE
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+●	DistMethod:
+  SELECT * FROM (SELECT 'The most common distribution method for coupons is '|| MEDIA ||'' message,
+         	COUNT(MEDIA) AS Frequency
+	FROM 	KELLOGG4
+	GROUP BY MEDIA
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+●	Top10PaidOff (NOT WORKING, HERE IS AN ATTEMPT):
+SELECT * FROM (SELECT BRAND, Sum(CUM__PD) AS Sales
+	FROM 	NCH
+ 	WHERE (year from DIST_DATE)>=2016
+ 	GROUP BY BRAND
+	ORDER BY Sales DESC) WHERE rownum <= 10
+
+●	NumberOfRecords:
+SELECT 'There are ' || count(*) || ' records in the database.' message
+FROM Kellogg3
+
+
+
+
+
+
+  SELECT * FROM (SELECT 'The most common distribution method for coupons is '|| COUPON_TYPE ||'' message,
+         	COUNT(COUPON_TYPE) AS Frequency
+	FROM 	KELLOGG3
+	GROUP BY COUPON_TYPE
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+SELECT * FROM   KELLOGG3
+ORDER BY Brand_Name
+OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+
+==
+
+SELECT 'The most common distribution method for coupons is ' || Coupon_Type ||'' message
+FROM Kellogg3
+
+==
+
+select  max(Coupon_Type) from Kellogg3
+==
+:::::::::::::::::::::::::::::::WORKING QUERIES::::::::::::::::::::::::::::::::::
+
+==
+  SELECT * FROM (SELECT 'The most common distribution method for coupons is '|| MEDIA ||'' message,
+         	COUNT(MEDIA) AS Frequency
+	FROM 	KELLOGG4
+	GROUP BY MEDIA
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+
+==
+  SELECT * FROM (SELECT 'The most common coupon type used by customers is '|| COUPON_TYPE ||'' message,
+         	COUNT(COUPON_TYPE) AS Frequency
+	FROM 	KELLOGG3
+	GROUP BY COUPON_TYPE
+	ORDER BY Frequency DESC) WHERE rownum <= 1
+
+
+==
+SELECT 'There are ' || count(*) || ' records in the database.' message
+FROM Kellogg3
+==
+
+
+SELECT MEDIA, COUNT(MEDIA) AS Frequency
+	FROM 	NCH2
+    WHERE DIST_DATE like '%2016%'
+	GROUP BY MEDIA
+    ORDER BY COUNT(MEDIA)
+
+With Frequency_Table AS
+(SELECT MEDIA, COUNT(MEDIA) AS Frequency
+	FROM 	NCH2
+    WHERE DIST_DATE like '%2016%'
+	GROUP BY MEDIA)
+    Select MEDIA, Frequency FROM Frequency_Table
+::::::::::::::::::::::This Works “this is the one we need::::::::::::::::::::::::
+With Frequency_Table AS
+(SELECT MEDIA, COUNT(MEDIA) AS Frequency
+	FROM 	NCH2
+    WHERE DIST_DATE like '%2016%'
+	GROUP BY MEDIA)
+    Select MEDIA, Frequency FROM Frequency_Table
+    WHERE Frequency = (select MAX(Frequency) From Frequency_Table)
+
+:::::::::::::::::::::::::::::::DistMethod2016:::::::::::::::::::::::::::::::::::
+With Frequency_Table AS
+(SELECT 'The most common distribution method for coupons in 2016 was '|| MEDIA ||'' message,
+MEDIA, COUNT(MEDIA) AS Frequency
+	FROM 	NCH2
+    WHERE DIST_DATE like '%2016%'
+	GROUP BY MEDIA)
+    Select MEDIA, Frequency FROM Frequency_Table
+    WHERE Frequency = (select MAX(Frequency) From Frequency_Table)
+
+::::::::::::::::::::::::::::BrandName2016:::::::::::::::::::::::::::::::::::::::
+  With Frequency_Table AS
+  (SELECT 'The most common brand in 2016 was '|| BRAND ||'' message,
+BRAND, COUNT(MEDIA) AS Frequency
+    FROM     NCH2
+    WHERE DIST_DATE like '%2016%'
+	GROUP BY BRAND)
+    Select BRAND, Frequency FROM Frequency_Table
+    WHERE Frequency = (select MAX(Frequency) From Frequency_Table)
+
+::::::::::::::::::::::::::::::::Top10PaidOff:::::::::::::::::::::::::::::::::::
+SELECT * FROM (SELECT 'The most common brand is '|| CUM__PD ||'' message,
+        COUNT(CUM__PD) AS Sales
+    FROM     NCH2
+     GROUP BY CUM__PD
+    ORDER BY Sales DESC) WHERE rownum <= 1
+
+::::::::::::::::::::::::::::::::::CouponType2016:::::::::::::::::::::::::::::::
+      With Frequency_Table AS
+  (SELECT 'The most common coupon type used by customers in 2016 was '|| COUPON_TYPE ||'' message,
+  COUPON_TYPE, COUNT(COUPON_TYPE) AS Frequency
+    FROM     CouponH
+    WHERE LAUNCH_DATE like '%2016%'
+	GROUP BY COUPON_TYPE)
+    Select COUPON_TYPE, Frequency FROM Frequency_Table
+    WHERE Frequency = (select MAX(Frequency) From Frequency_Table)
