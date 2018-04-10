@@ -72,7 +72,7 @@ function onIntent(intentRequest, session, callback) {
         if (intentName == 'DistMethod') {
         handleChartRequestDistMethod(intent, session, callback);
         }
-       else if (intentName == 'NumberOfRecords') {
+        else if (intentName == 'NumberOfRecords') {
         handleChartRequestNumberOfRecords(intent, session, callback);
         }
         else if (intentName == 'CouponType') {
@@ -125,16 +125,6 @@ function onSessionEnded(sessionEndedRequest, session) {
 }
 const https = require('https');
 
-function handleChartRequestDistMethod(intent, session, callbackDistMethod) {
-         callAPEXDistMethod(function (result, error) {
-            if (error) {
-                console.log('error')
-            } else {
-                console.log("Final result is"+JSON.stringify(result))
-                callbackDistMethod(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
-            }
-        });
-}
 
 /******************************************************************************
 BEGIN CODING TO ASK THE QUESTIONS. EACH BLOCK OF QUESTIONS MUST BE AROUND 25
@@ -146,6 +136,16 @@ QUESTION 1
 FROM LINES 108 - 132 (LINES COULD CHANGE) IS ONLY ONE QUESTION
 NOTE, THIS QUESTION IS TRYING TO MAKE ALEXA ASK THE USER FOR A QUESTION.
 ******************************************************************************/
+function handleChartRequestDistMethod(intent, session, callbackDistMethod) {
+         callAPEXDistMethod(function (result, error) {
+            if (error) {
+                console.log('error')
+            } else {
+                console.log("Final result is"+JSON.stringify(result))
+                callbackDistMethod(null,buildSpeechletResponseWithoutCard(result.speech,"sample re-prompt",true))
+            }
+        });
+}
 var callAPEXDistMethod = function (callbackDistMethod) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistMethod/";
     var req = https.get(url, (res) => {
@@ -161,6 +161,11 @@ var callAPEXDistMethod = function (callbackDistMethod) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 2
+******************************************************************************/
 function handleChartRequestNumberOfRecords(intent, session, callbackNumberOfRecords) {
          callAPEXNumberOfRecords(function (result, error) {
             if (error) {
@@ -171,10 +176,6 @@ function handleChartRequestNumberOfRecords(intent, session, callbackNumberOfReco
             }
         });
 }
-
-/******************************************************************************
-QUESTION 2
-******************************************************************************/
 var callAPEXNumberOfRecords = function (callbackNumberOfRecords) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comrecords/";
     var req = https.get(url, (res) => {
@@ -190,6 +191,11 @@ var callAPEXNumberOfRecords = function (callbackNumberOfRecords) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 3
+******************************************************************************/
 function handleChartRequestCouponType(intent, session, callbackCouponType) {
          callAPEXCouponType(function (result, error) {
             if (error) {
@@ -200,10 +206,6 @@ function handleChartRequestCouponType(intent, session, callbackCouponType) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 3
-******************************************************************************/
 var callAPEXCouponType = function (callbackCouponType) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comCouponType/";
     var req = https.get(url, (res) => {
@@ -219,6 +221,11 @@ var callAPEXCouponType = function (callbackCouponType) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 4 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 function handleChartRequestBrandName(intent, session, callbackBrandName) {
          callAPEXBrandName(function (result, error) {
             if (error) {
@@ -229,11 +236,6 @@ function handleChartRequestBrandName(intent, session, callbackBrandName) {
             }
         });
 }
-
-
-/******************************************************************************
-QUESTION 4 UNDEFINED RESPONSE ERROR
-******************************************************************************/
 var callAPEXBrandName = function (callbackBrandName) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comBrandName/";
     var req = https.get(url, (res) => {
@@ -249,6 +251,11 @@ var callAPEXBrandName = function (callbackBrandName) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 5
+******************************************************************************/
 function handleChartRequestDistMethodSix(intent, session, callbackDistMethodSix) {
          callAPEXDistMethodSix(function (result, error) {
             if (error) {
@@ -259,10 +266,6 @@ function handleChartRequestDistMethodSix(intent, session, callbackDistMethodSix)
             }
         });
 }
-
-/******************************************************************************
-QUESTION 5
-******************************************************************************/
 var callAPEXDistMethodSix = function (callbackDistMethodSix) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistMethod2016/";
     var req = https.get(url, (res) => {
@@ -278,6 +281,11 @@ var callAPEXDistMethodSix = function (callbackDistMethodSix) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 6
+******************************************************************************/
 function handleChartRequestTopBrands(intent, session, callbackTopBrands) {
          callAPEXTopBrands(function (result, error) {
             if (error) {
@@ -288,10 +296,6 @@ function handleChartRequestTopBrands(intent, session, callbackTopBrands) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 6
-******************************************************************************/
 var callAPEXTopBrands = function (callbackTopBrands) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PaidOff/";
     var req = https.get(url, (res) => {
@@ -310,6 +314,11 @@ var callAPEXTopBrands = function (callbackTopBrands) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 7 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 function handleChartRequestTopDistMethod(intent, session, callbackTopDistMethod) {
          callAPEXTopDistMethod(function (result, error) {
             if (error) {
@@ -320,10 +329,6 @@ function handleChartRequestTopDistMethod(intent, session, callbackTopDistMethod)
             }
         });
 }
-
-/******************************************************************************
-QUESTION 7 UNDEFINED RESPONSE ERROR
-******************************************************************************/
 var callAPEXTopDistMethod = function (callbackTopDistMethod) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10DistMethod/";
     var req = https.get(url, (res) => {
@@ -343,6 +348,11 @@ var callAPEXTopDistMethod = function (callbackTopDistMethod) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 8
+******************************************************************************/
 function handleChartRequestBrandNameSix(intent, session, callbackBrandNameSix) {
          callAPEXBrandNameSix(function (result, error) {
             if (error) {
@@ -353,10 +363,6 @@ function handleChartRequestBrandNameSix(intent, session, callbackBrandNameSix) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 8
-******************************************************************************/
 var callAPEXBrandNameSix = function (callbackBrandNameSix) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comBrandName2016/";
     var req = https.get(url, (res) => {
@@ -372,6 +378,11 @@ var callAPEXBrandNameSix = function (callbackBrandNameSix) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 9 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 function handleChartRequestCouponTypeSix(intent, session, callbackCouponTypeSix) {
          callAPEXCouponTypeSix(function (result, error) {
             if (error) {
@@ -382,10 +393,6 @@ function handleChartRequestCouponTypeSix(intent, session, callbackCouponTypeSix)
             }
         });
 }
-
-/******************************************************************************
-QUESTION 9 UNDEFINED RESPONSE ERROR
-******************************************************************************/
 var callAPEXCouponTypeSix = function (callbackCouponTypeSix) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comCouponType2016/";
     var req = https.get(url, (res) => {
@@ -402,6 +409,11 @@ var callAPEXCouponTypeSix = function (callbackCouponTypeSix) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 10
+******************************************************************************/
 function handleChartRequestDistCountFour(intent, session, callbackDistCountFour) {
          callAPEXDistCountFour(function (result, error) {
             if (error) {
@@ -412,10 +424,6 @@ function handleChartRequestDistCountFour(intent, session, callbackDistCountFour)
             }
         });
 }
-
-/******************************************************************************
-QUESTION 10
-******************************************************************************/
 var callAPEXDistCountFour = function (callbackDistCountFour) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2014";
     var req = https.get(url, (res) => {
@@ -432,6 +440,11 @@ var callAPEXDistCountFour = function (callbackDistCountFour) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 11
+******************************************************************************/
 function handleChartRequestDistCountFive(intent, session, callbackDistCountFive) {
          callAPEXDistCountFive(function (result, error) {
             if (error) {
@@ -442,10 +455,6 @@ function handleChartRequestDistCountFive(intent, session, callbackDistCountFive)
             }
         });
 }
-
-/******************************************************************************
-QUESTION 11
-******************************************************************************/
 var callAPEXDistCountFive = function (callbackDistCountFive) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2015/";
     var req = https.get(url, (res) => {
@@ -462,6 +471,12 @@ var callAPEXDistCountFive = function (callbackDistCountFive) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 12
+******************************************************************************/
+var callAPEXDistCountSix = function (callbackDistCountSix) {
 function handleChartRequestDistCountSix(intent, session, callbackDistCountSix) {
          callAPEXDistCountSix(function (result, error) {
             if (error) {
@@ -472,11 +487,6 @@ function handleChartRequestDistCountSix(intent, session, callbackDistCountSix) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 12
-******************************************************************************/
-var callAPEXDistCountSix = function (callbackDistCountSix) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comDistCount2016/";
     var req = https.get(url, (res) => {
         var body = "";
@@ -492,6 +502,11 @@ var callAPEXDistCountSix = function (callbackDistCountSix) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 13
+******************************************************************************/
 function handleChartRequestPromoType(intent, session, callbackPromoType) {
          callAPEXPromoType(function (result, error) {
             if (error) {
@@ -502,10 +517,6 @@ function handleChartRequestPromoType(intent, session, callbackPromoType) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 13
-******************************************************************************/
 var callAPEXPromoType = function (callbackPromoType) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comPromoType";
     var req = https.get(url, (res) => {
@@ -522,6 +533,11 @@ var callAPEXPromoType = function (callbackPromoType) {
         console.log('error');
     });
 };
+
+
+/******************************************************************************
+QUESTION 14 UNDEFINED RESPONSE ERROR
+******************************************************************************/
 function handleChartRequestTopPromo(intent, session, callbackTopPromo) {
          callAPEXTopPromo(function (result, error) {
             if (error) {
@@ -532,10 +548,6 @@ function handleChartRequestTopPromo(intent, session, callbackTopPromo) {
             }
         });
 }
-
-/******************************************************************************
-QUESTION 14 UNDEFINED RESPONSE ERROR
-******************************************************************************/
 var callAPEXTopPromo = function (callbackTopPromo) {
     var url = "https://apex.oracle.com/pls/apex/kelloggwmu/kellogg.cnhl4iqabzv5.us-east-1.rds.amazonaws.comTop10PromoType";
     var req = https.get(url, (res) => {
