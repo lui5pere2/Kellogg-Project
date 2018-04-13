@@ -23,6 +23,7 @@
                     "name": "DistMethod",
                     "slots": [],
                     "samples": [
+                        "To tell me the most common distribution method for coupons",
                         "What is the most common distribution method for coupons"
                     ]
                 },
@@ -31,7 +32,6 @@
                     "slots": [],
                     "samples": [
                         "to tell me the number of records in the database",
-                        "What is why",
                         "How many records are there in the database",
                         "How many records are in the database"
                     ]
@@ -40,7 +40,6 @@
                     "name": "CouponType",
                     "slots": [],
                     "samples": [
-                        "What is What",
                         "What type of coupon is used mostly by customers",
                         "What is the most common coupon type used by customers"
                     ]
@@ -49,40 +48,31 @@
                     "name": "BrandName",
                     "slots": [],
                     "samples": [
-                        "what is where",
+                        "To tell me what brand has the most coupons",
                         "What brand has the most coupons"
-                    ]
-                },
-                {
-                    "name": "DistMethodSix",
-                    "slots": [],
-                    "samples": [
-                        "What was the most common distribution method last year",
-                        "Where is where",
-                        "What is the most common distribution method for coupons in six"
                     ]
                 },
                 {
                     "name": "TopBrands",
                     "slots": [],
                     "samples": [
-                        "What the hell",
-                        "To tell me the top ten paid off brands",
-                        "What are the top ten paid off brands"
+                        "To tell me the top five paid off brands",
+                        "What are the top five paid off brands"
                     ]
                 },
                 {
                     "name": "TopDistMethod",
                     "slots": [],
                     "samples": [
-                        "What are the top ten coupon distribution methods",
-                        "What are the top ten distribution methods for coupons"
+                        "What are the top five coupon distribution methods",
+                        "To tell me what are the top five coupon distribution methods"
                     ]
                 },
                 {
                     "name": "BrandNameSix",
                     "slots": [],
                     "samples": [
+                        "To tell me what brand had the most coupons in two thousand and sixteen",
                         "What brand had the most coupons in two thousand and sixteen"
                     ]
                 },
@@ -90,8 +80,8 @@
                     "name": "CouponTypeSix",
                     "slots": [],
                     "samples": [
-                        "What was the most common coupon type used by customes in two thousand and sixteen",
-                        "What type of coupon is used mostly by customers in two thousand and sixteen"
+                        "To tell me the most common coupon type used by customes in two thousand and sixteen",
+                        "What was the most common coupon type used by customes in two thousand and sixteen"
                     ]
                 },
                 {
@@ -106,7 +96,7 @@
                     "name": "DistCountFive",
                     "slots": [],
                     "samples": [
-                        "How many coupons were distributed two thousand and fifteen",
+                        "How many coupons were distributed in two thousand and fifteen",
                         "To tell me the number of coupons distributed in two thousand and fifteen"
                     ]
                 },
@@ -114,22 +104,13 @@
                     "name": "DistCountSix",
                     "slots": [],
                     "samples": [
-                        "Why is what",
                         "To tell me the number of coupons distributed in two thousand and sixteen",
-                        "How many coupons were distributed two thousand and sixteen"
+                        "How many coupons were distributed in two thousand and sixteen"
                     ]
                 },
                 {
                     "name": "PromoType",
-                    "slots": [
-                        {
-                            "name": "LastYearPromo",
-                            "type": "AMAZON.Corporation",
-                            "samples": [
-                                "yes"
-                            ]
-                        }
-                    ],
+                    "slots": [],
                     "samples": [
                         "To tell me the most common PROMOTION TYPE",
                         "What is the most common PROMOTION TYPE"
@@ -139,72 +120,20 @@
                     "name": "TopPromo",
                     "slots": [],
                     "samples": [
-                        "To tell me the top ten PROMOTION TYPES",
-                        "What are the top ten PROMOTION TYPES"
+                        "To tell me the top five PROMOTION TYPES",
+                        "What are the top five PROMOTION TYPES"
                     ]
                 },
                 {
-                    "name": "TestingPurpose",
+                    "name": "MinDistMethod",
                     "slots": [],
-                    "samples": []
+                    "samples": [
+                        "To tell me the least common coupon distribution method",
+                        "What is the least common distribution method for coupons"
+                    ]
                 }
             ],
             "types": []
-        },
-        "dialog": {
-            "intents": [
-                {
-                    "name": "PromoType",
-                    "confirmationRequired": false,
-                    "prompts": {},
-                    "slots": [
-                        {
-                            "name": "LastYearPromo",
-                            "type": "AMAZON.Corporation",
-                            "confirmationRequired": false,
-                            "elicitationRequired": true,
-                            "prompts": {
-                                "elicitation": "Elicit.Slot.1065532073076.30505987017"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "DistMethod",
-                    "confirmationRequired": false,
-                    "prompts": {},
-                    "slots": []
-                }
-            ]
-        },
-        "prompts": [
-            {
-                "id": "Elicit.Slot.1065532073076.30505987017",
-                "variations": [
-                    {
-                        "type": "PlainText",
-                        "value": "Would you like to know the numbers from last year?"
-                    }
-                ]
-            },
-            {
-                "id": "Elicit.Slot.236843195186.20990551960",
-                "variations": [
-                    {
-                        "type": "PlainText",
-                        "value": "Would you like to know what is the most common coupon type used by customers?"
-                    }
-                ]
-            },
-            {
-                "id": "Confirm.Slot.236843195186.20990551960",
-                "variations": [
-                    {
-                        "type": "PlainText",
-                        "value": "Ok"
-                    }
-                ]
-            }
-        ]
+        }
     }
 }
