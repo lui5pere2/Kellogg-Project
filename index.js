@@ -75,7 +75,7 @@ function onIntent(intentRequest, session, callback) {
     if (intentName == 'DistMethod') {
         handleChartRequestDistMethod(intent, session, callback);
         }
-       else if (intentName == 'NumberOfRecords') {
+        else if (intentName == 'NumberOfRecords') {
         handleChartRequestNumberOfRecords(intent, session, callback);
         }
         else if (intentName == 'CouponType') {
