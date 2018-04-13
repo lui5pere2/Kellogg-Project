@@ -112,28 +112,28 @@ var handlers = {
 
 
 
-
+// waiting for user to say yes/no to respond back with the following
 var questionHandlers = Alexa.CreateStateHandler("_QUESTIONS", {
   'AMAZON.YesIntent' : function() {
     this.handler.state = "_CONCLUSION";
-      this.response.speak("You said YES dude on the question'");
+      this.response.speak("You said yes on the question'");
       this.emit(':responseReady');
     },
     'AMAZON.NoIntent' : function() {
-      this.response.speak("You said no bro in the question. Would you like to continue")
+      this.response.speak("You said no in the question. Would you like to continue")
                     .listen('Would you like');
     this.emit(':responseReady');
     },
 });
 
-
+// Waiting for the the question on top to keep the conversation
 var conslusionHandlers = Alexa.CreateStateHandler("_CONCLUSION",{
   'AMAZON.YesIntent' : function() {
-      this.response.speak("You said YES dude on the conclusion'");
+      this.response.speak("You said yes on the conclusion'");
       this.emit(':responseReady');
     },
     'AMAZON.NoIntent' : function() {
-        this.response.speak("You said no dude on the conclusion'");
+        this.response.speak("You said no on the conclusion'");
     this.emit(':responseReady');
     },
 });
